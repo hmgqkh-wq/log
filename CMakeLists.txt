@@ -1,10 +1,26 @@
 cmake_minimum_required(VERSION 3.10)
+
 project(xclipse_superwrapper C)
+
 set(CMAKE_C_STANDARD 11)
-add_library(xeno_wrapper SHARED usr/lib/libxeno_wrapper.c usr/lib/bc_emulate.c)
+
+add_library(xeno_wrapper SHARED
+    usr/lib/libxeno_wrapper.c
+    usr/lib/bc_emulate.c
+)
+
 find_library(DL_LIB dl)
-if(DL_LIB) target_link_libraries(xeno_wrapper ${DL_LIB}) endif()
+
+if(DL_LIB)
+    target_link_libraries(xeno_wrapper ${DL_LIB})
+endif()
+
 find_package(Threads REQUIRED)
 target_link_libraries(xeno_wrapper Threads::Threads)
+
 set_target_properties(xeno_wrapper PROPERTIES OUTPUT_NAME "libxeno_wrapper")
-install(TARGETS xeno_wrapper LIBRARY DESTINATION usr/lib)
+
+install(
+    TARGETS xeno_wrapper
+    LIBRARY DESTINATION usr/lib
+)
