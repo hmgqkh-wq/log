@@ -1,0 +1,34 @@
+name: Build Xclipse Wrapper & Collect Feature Dump
+on: [workflow_dispatch, push]
+jobs:
+  build-and-dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt update
+          sudo apt install -y cmake ninja-build clang pkg-config
+      - name: Configure
+        run: |
+          mkdir -p build && cd build
+          cmake -G Ninja ..
+      - name: Build
+        run: |
+          cd build && ninja || true
+      - name: Run feature dump generator (if present)
+        run: |
+          if [ -x build/xclipse_feature_dump_generator ]; then build/xclipse_feature_dump_generator || true; fi
+      - name: Collect artifacts
+        run: |
+          mkdir -p output_bundle
+          cp -r usr/lib/*.so output_bundle/ || true
+          cp -r etc/exynostools/profiles/vendor/xilinx_xc/manifest.json output_bundle/manifest.json || true
+          # include any logs produced
+          cp -r var/log/* output_bundle/ 2>/dev/null || true
+          zip -r xclipse_output_bundle.zip output_bundle || true
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xclipse-940-wrapper-logs-and-build
+          path: xclipse_output_bundle.zip
