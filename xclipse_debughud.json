@@ -1,0 +1,13 @@
+{
+  "file_format_version": "1.0.0",
+  "layers": [
+    {
+      "name": "VK_LAYER_XCIPSE_DEBUGHUD",
+      "type": "DEVICE",
+      "library_path": "usr/lib/libxeno_wrapper.so",
+      "api_version": "1.2.0",
+      "implementation_version": 1,
+      "description": "Debug HUD layer that overlays performance counters for Xclipse"
+    }
+  ]
+}
